@@ -17,7 +17,7 @@ public class ParallelStreams {
     }
 
     public static long parallelSum(long n) {
-        return Stream.iterate(1L, i -> i + 1).limit(n).parallel().reduce(Long::sum).get();
+        return Stream.iterate(1L, i -> i + 1).limit(n).parallel().reduce(Long::sum).get();//并行处理流
     }
 
     public static long rangedSum(long n) {

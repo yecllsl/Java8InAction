@@ -6,7 +6,7 @@ import java.util.function.*;
 public class ParallelStreamsHarness {
 
     public static final ForkJoinPool FORK_JOIN_POOL = new ForkJoinPool();
-
+    //测试并行的时间
     public static void main(String[] args) {
         System.out.println("Iterative Sum done in: " + measurePerf(ParallelStreams::iterativeSum, 10_000_000L) + " msecs");
         System.out.println("Sequential Sum done in: " + measurePerf(ParallelStreams::sequentialSum, 10_000_000L) + " msecs");
