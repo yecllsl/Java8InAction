@@ -55,16 +55,16 @@ public class WordCount {
             this.lastSpace = lastSpace;
         }
 
-        public WordCounter accumulate(Character c) {
+        public WordCounter accumulate(Character c) {//遍历Character
             if (Character.isWhitespace(c)) {
                 return lastSpace ? this : new WordCounter(counter, true);
             } else {
-                return lastSpace ? new WordCounter(counter+1, false) : this;
+                return lastSpace ? new WordCounter(counter+1, false) : this;//上一个字符为空格，本字符不是空格时计数器加一
             }
         }
 
         public WordCounter combine(WordCounter wordCounter) {
-            return new WordCounter(counter + wordCounter.counter, wordCounter.lastSpace);
+            return new WordCounter(counter + wordCounter.counter, wordCounter.lastSpace);//仅需要计数器的总和，无需关心lastSpace
         }
 
         public int getCounter() {
@@ -83,20 +83,20 @@ public class WordCount {
 
         @Override
         public boolean tryAdvance(Consumer<? super Character> action) {
-            action.accept(string.charAt(currentChar++));
-            return currentChar < string.length();
+            action.accept(string.charAt(currentChar++));//处理当前字符串
+            return currentChar < string.length();//如果还有字符串要处理，则返回true
         }
 
         @Override
         public Spliterator<Character> trySplit() {
             int currentSize = string.length() - currentChar;
             if (currentSize < 10) {
-                return null;
+                return null;//返回null表示要解析的string足够小，可以顺序处理
             }
-            for (int splitPos = currentSize / 2 + currentChar; splitPos < string.length(); splitPos++) {
-                if (Character.isWhitespace(string.charAt(splitPos))) {
-                    Spliterator<Character> spliterator = new WordCounterSpliterator(string.substring(currentChar, splitPos));
-                    currentChar = splitPos;
+            for (int splitPos = currentSize / 2 + currentChar; splitPos < string.length(); splitPos++) {//将试探拆分位置设定为要解析的string中间
+                if (Character.isWhitespace(string.charAt(splitPos))) {//将拆分未知前进到下一个空格
+                    Spliterator<Character> spliterator = new WordCounterSpliterator(string.substring(currentChar, splitPos));//传建一个新的WordCounterSpliterator来解析string从开始到拆分位置的部分
+                    currentChar = splitPos;//将这个WordCounterSpliterator的起始位置设为拆分位置
                     return spliterator;
                 }
             }

@@ -8,7 +8,7 @@ public class ShopMain {
   public static void main(String[] args) {
     Shop shop = new Shop("BestShop");
     long start = System.nanoTime();
-    Future<Double> futurePrice = shop.getPriceAsync("my favorite product");
+    Future<Double> futurePrice = shop.getPriceAsync("my favorite product");//查询商品，试图取得商品的价格
     long invocationTime = ((System.nanoTime() - start) / 1_000_000);
     System.out.println("Invocation returned after " + invocationTime 
                                                     + " msecs");
@@ -16,7 +16,7 @@ public class ShopMain {
     doSomethingElse();
     // while the price of the product is being calculated
     try {
-        double price = futurePrice.get();
+        double price = futurePrice.get();//从future对象中都区价格，如果价格未知，会发生阻塞
         System.out.printf("Price is %.2f%n", price);
     } catch (ExecutionException | InterruptedException e) {
         throw new RuntimeException(e);
