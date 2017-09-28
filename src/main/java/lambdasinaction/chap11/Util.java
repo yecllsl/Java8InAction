@@ -13,7 +13,7 @@ public class Util {
     private static final Random RANDOM = new Random(0);
     private static final DecimalFormat formatter = new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.US));
 
-    public static void delay() {
+    public static void delay() {//静态方法实现延时功能
         int delay = 1000;
         //int delay = 500 + RANDOM.nextInt(2000);
         try {

@@ -23,9 +23,9 @@ public class AsyncShop {
         new Thread( () -> {
                     try {
                         double price = calculatePrice(product);
-                        futurePrice.complete(price);
+                        futurePrice.complete(price);//价格计算正常结束，完成Future操作并设置价格
                     } catch (Exception ex) {
-                        futurePrice.completeExceptionally(ex);
+                        futurePrice.completeExceptionally(ex);//跑出导致失败的异常，完成这次Future的操作。
                     }
         }).start();
         return futurePrice;

@@ -33,29 +33,29 @@ public class BestPriceFinder {
             return t;
         }
     });
-
+    //通过stream方式获取价格
     public List<String> findPricesSequential(String product) {
         return shops.stream()
                 .map(shop -> shop.getName() + " price is " + shop.getPrice(product))
                 .collect(Collectors.toList());
     }
-
+    //并行流的方式处理list
     public List<String> findPricesParallel(String product) {
         return shops.parallelStream()
                 .map(shop -> shop.getName() + " price is " + shop.getPrice(product))
                 .collect(Collectors.toList());
     }
-
+    //使用两个Stream并行的处理两个队列的数据。
     public List<String> findPricesFuture(String product) {
         List<CompletableFuture<String>> priceFutures =
                 shops.stream()
                 .map(shop -> CompletableFuture.supplyAsync(() -> shop.getName() + " price is "
                         + shop.getPrice(product), executor))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());//使用CompletableFuture以异步的方式计算每种商品的价格。
 
         List<String> prices = priceFutures.stream()
                 .map(CompletableFuture::join)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());//等待所有异步操作结束。
         return prices;
     }
 
