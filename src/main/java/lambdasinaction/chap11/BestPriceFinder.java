@@ -28,9 +28,9 @@ public class BestPriceFinder {
 
     public List<String> findPricesSequential(String product) {
         return shops.stream()
-                .map(shop -> shop.getPrice(product))
-                .map(Quote::parse)
-                .map(Discount::applyDiscount)
+                .map(shop -> shop.getPrice(product))//获得每个shop对象中商品的原始价格
+                .map(Quote::parse)//队返回字符串进行转换
+                .map(Discount::applyDiscount)//联系Discount服务，为每个Quote申请折扣
                 .collect(Collectors.toList());
     }
 
@@ -53,15 +53,15 @@ public class BestPriceFinder {
 
     public Stream<CompletableFuture<String>> findPricesStream(String product) {
         return shops.stream()
-                .map(shop -> CompletableFuture.supplyAsync(() -> shop.getPrice(product), executor))
-                .map(future -> future.thenApply(Quote::parse))
-                .map(future -> future.thenCompose(quote -> CompletableFuture.supplyAsync(() -> Discount.applyDiscount(quote), executor)));
+                .map(shop -> CompletableFuture.supplyAsync(() -> shop.getPrice(product), executor))//以异步的方式获得每个shop对象中商品的原始价格
+                .map(future -> future.thenApply(Quote::parse))//同步即可解决，同步的时候主线程和任务执行线程是同一个线程
+                .map(future -> future.thenCompose(quote -> CompletableFuture.supplyAsync(() -> Discount.applyDiscount(quote), executor)));//使用另一个异步任务构造期望的future，申请折扣。theCompose方法，把两个Future连接起来
     }
 
     public void printPricesStream(String product) {
         long start = System.nanoTime();
         CompletableFuture[] futures = findPricesStream(product)
-                .map(f -> f.thenAccept(s -> System.out.println(s + " (done in " + ((System.nanoTime() - start) / 1_000_000) + " msecs)")))
+                .map(f -> f.thenAccept(s -> System.out.println(s + " (done in " + ((System.nanoTime() - start) / 1_000_000) + " msecs)")))//通过thenAccept响应completion事件
                 .toArray(size -> new CompletableFuture[size]);
         CompletableFuture.allOf(futures).join();
         System.out.println("All shops have now responded in " + ((System.nanoTime() - start) / 1_000_000) + " msecs");

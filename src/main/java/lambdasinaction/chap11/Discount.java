@@ -16,10 +16,11 @@ public class Discount {
     }
 
     public static String applyDiscount(Quote quote) {
+        //将折扣代码应用于商品最初的原始价格
         return quote.getShopName() + " price is " + Discount.apply(quote.getPrice(), quote.getDiscountCode());
     }
     private static double apply(double price, Code code) {
-        delay();
+        delay();//模拟服务延迟
         return format(price * (100 - code.percentage) / 100);
     }
 }

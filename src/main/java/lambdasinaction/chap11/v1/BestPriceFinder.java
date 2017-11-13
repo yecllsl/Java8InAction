@@ -50,11 +50,11 @@ public class BestPriceFinder {
         List<CompletableFuture<String>> priceFutures =
                 shops.stream()
                 .map(shop -> CompletableFuture.supplyAsync(() -> shop.getName() + " price is "
-                        + shop.getPrice(product), executor))
+                        + shop.getPrice(product), executor))//以异步的方式取得每个shop中指定产品的原始价格
                 .collect(Collectors.toList());//使用CompletableFuture以异步的方式计算每种商品的价格。
 
         List<String> prices = priceFutures.stream()
-                .map(CompletableFuture::join)
+                .map(CompletableFuture::join)//等待流中的所有future执行完毕，并提取各自的返回值
                 .collect(Collectors.toList());//等待所有异步操作结束。
         return prices;
     }
@@ -67,10 +67,10 @@ public class BestPriceFinder {
             // CompletableFuture so that it is compatible with the
             // CompletableFuture::join operation below.
             CompletableFuture<Double> futurePriceInUSD = 
-                CompletableFuture.supplyAsync(() -> shop.getPrice(product))
-                .thenCombine(
+                CompletableFuture.supplyAsync(() -> shop.getPrice(product))//第一个任务查询商店取得商品的价格
+                .thenCombine(//这个方法链接两个Future任务，如果调用Async的方法，两个任务在不同的线程中执行
                     CompletableFuture.supplyAsync(
-                        () ->  ExchangeService.getRate(Money.EUR, Money.USD)),
+                        () ->  ExchangeService.getRate(Money.EUR, Money.USD)),//创建第二个独立任务，查询美元和欧元之间的转换汇率
                     (price, rate) -> price * rate
                 );
             priceFutures.add(futurePriceInUSD);
