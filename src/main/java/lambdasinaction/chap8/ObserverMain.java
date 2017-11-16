@@ -13,7 +13,7 @@ public class ObserverMain {
         f.registerObserver(new LeMonde());
         f.notifyObservers("The queen said her favourite book is Java 8 in Action!");
 
-
+        //Lambda的实现方式
         Feed feedLambda = new Feed();
 
         feedLambda.registerObserver((String tweet) -> {

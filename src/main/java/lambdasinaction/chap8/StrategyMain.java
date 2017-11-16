@@ -11,7 +11,7 @@ public class StrategyMain {
         System.out.println(v2.validate("bbbb"));
 
 
-        // with lambdas
+        // with lambdas 新的利用lambdas的策略方式
         Validator v3 = new Validator((String s) -> s.matches("\\d+"));
         System.out.println(v3.validate("aaaa"));
         Validator v4 = new Validator((String s) -> s.matches("[a-z]+"));

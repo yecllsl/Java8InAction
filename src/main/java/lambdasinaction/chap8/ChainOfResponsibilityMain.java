@@ -13,7 +13,7 @@ public class ChainOfResponsibilityMain {
         String result1 = p1.handle("Aren't labdas really sexy?!!");
         System.out.println(result1);
 
-
+        //通过lambda实现责任链模式
         UnaryOperator<String> headerProcessing =
                 (String text) -> "From Raoul, Mario and Alan: " + text;
         UnaryOperator<String> spellCheckerProcessing =

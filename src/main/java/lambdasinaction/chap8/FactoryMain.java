@@ -26,7 +26,7 @@ public class FactoryMain {
                 default: throw new RuntimeException("No such product " + name);
             }
         }
-
+        //并不完美，不能完全替代现有的设计模式。尤其是带参数的情况
         public static Product createProductLambda(String name){
             Supplier<Product> p = map.get(name);
             if(p != null) return p.get();

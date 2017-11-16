@@ -8,6 +8,6 @@ public class OptionalMain {
         return person.flatMap(Person::getCar)
                      .flatMap(Car::getInsurance)
                      .map(Insurance::getName)
-                     .orElse("Unknown");
+                     .orElse("Unknown");//如果optional的结果值为空，设置默认值
     }
 }
